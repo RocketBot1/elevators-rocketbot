@@ -135,13 +135,13 @@
         <button id="closeOwnerModal" type="button" class="text-slate-400 hover:text-white text-base px-2">✕</button>
       </div>
       <p class="text-xs text-slate-300 leading-relaxed">
-        Stored locally in <strong>your browser only</strong> (never uploaded to GitHub or shared with visitors). Auto-detects the active Gemini Flash model for your key.
+        Stored locally in <strong>your browser only</strong> (never uploaded to GitHub or shared with visitors).
       </p>
       <input id="apiKeyInput" type="password" autocomplete="off" placeholder="••••••••••••••••••••" class="w-full bg-space-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-sky-500" />
       <p id="keyErrorMsg" class="hidden text-xs text-rose-400 break-words"></p>
       <div class="flex justify-end gap-2">
         <button id="clearKeyBtn" type="button" class="px-3 py-2 rounded-lg text-xs bg-space-800 text-slate-300 hover:text-white border border-slate-700">Remove</button>
-        <button id="saveKeyBtn" type="button" class="px-4 py-2 rounded-lg text-xs font-semibold bg-sky-500 text-slate-950 hover:bg-sky-400">Save &amp; Test</button>
+        <button id="saveKeyBtn" type="button" class="px-4 py-2 rounded-lg text-xs font-semibold bg-sky-500 text-slate-950 hover:bg-sky-400">Save Privately</button>
       </div>
     </div>
   </div>
@@ -169,14 +169,13 @@
       }
 
       let apiKey = getStoredKey();
-      let detectedModel = '';
       let chatHistory = [];
 
       function updateStatus(mode) {
         if (mode === 'error') {
           statusText.textContent = 'Key Error (Tap Here)';
         } else if (apiKey) {
-          statusText.textContent = 'Gemini Live';
+          statusText.textContent = 'Gemini 3.8 Live';
         } else {
           statusText.textContent = 'Verified Specs';
         }
@@ -194,7 +193,6 @@
       document.getElementById('closeOwnerModal').addEventListener('click', () => ownerModal.classList.add('hidden'));
       document.getElementById('saveKeyBtn').addEventListener('click', () => {
         apiKey = apiKeyInput.value.trim();
-        detectedModel = '';
         setStoredKey(apiKey);
         keyErrorMsg.classList.add('hidden');
         updateStatus();
@@ -202,7 +200,6 @@
       });
       document.getElementById('clearKeyBtn').addEventListener('click', () => {
         apiKey = '';
-        detectedModel = '';
         apiKeyInput.value = '';
         setStoredKey('');
         keyErrorMsg.classList.add('hidden');
@@ -272,35 +269,18 @@ Guardrail: If asked about unrelated topics (movies, homework, coding, general tr
         return `I'm **Rocketbot**, built exclusively for **Team "The Elevators'" NGN 110 Water Rocket**. Try asking a specific question about our **3D-printed nose cone**, **3 swept fins**, **water ratio**, **launch angle**, or **safety rules**!`;
       }
 
-      async function resolveActiveModel() {
-        if (detectedModel) return [detectedModel];
-        try {
-          const res = await fetch('https://generativelanguage.googleapis.com/v1beta/models', {
-            headers: { 'x-goog-api-key': apiKey }
-          });
-          if (res.ok) {
-            const data = await res.json();
-            const list = (data.models || [])
-              .filter(m => (m.supportedGenerationMethods || []).includes('generateContent'))
-              .map(m => m.name.replace(/^models\//, ''));
-            const flashModels = list.filter(n => /flash/i.test(n) && !/8b|lite|image|audio|tts/i.test(n));
-            if (flashModels.length > 0) return flashModels.reverse();
-            if (list.length > 0) return list;
-          }
-        } catch (e) {}
-        return ['gemini-3.8-flash', 'gemini-flash-latest', 'gemini-2.0-flash'];
-      }
-
       async function getGeminiReply(userMessage) {
         chatHistory.push({ role: 'user', parts: [{ text: userMessage }] });
         const recentHistory = chatHistory.slice(-8);
-        const candidates = await resolveActiveModel();
-        let lastError = 'API request failed';
 
-        for (const model of candidates) {
-          const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+        try {
+          const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent`;
           const response = await fetch(url, {
             method: 'POST',
+            signal: controller.signal,
             headers: {
               'Content-Type': 'application/json',
               'x-goog-api-key': apiKey
@@ -312,26 +292,32 @@ Guardrail: If asked about unrelated topics (movies, homework, coding, general tr
             })
           });
 
-          if (response.ok) {
-            const data = await response.json();
-            const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-            if (text) {
-              detectedModel = model;
-              chatHistory.push({ role: 'model', parts: [{ text }] });
-              updateStatus();
-              return text;
-            }
-          } else {
-            const errData = await response.json().catch(() => ({}));
-            lastError = errData?.error?.message || `HTTP ${response.status}`;
-            if (response.status !== 404 && !/no longer available|not found|not supported/i.test(lastError)) {
-              break;
-            }
-          }
-        }
+          clearTimeout(timeoutId);
 
-        chatHistory.pop();
-        throw new Error(lastError);
+          if (!response.ok) {
+            chatHistory.pop();
+            const errData = await response.json().catch(() => ({}));
+            throw new Error(errData?.error?.message || `HTTP ${response.status}`);
+          }
+
+          const data = await response.json();
+          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (!text) {
+            chatHistory.pop();
+            throw new Error('Empty response from Gemini');
+          }
+
+          chatHistory.push({ role: 'model', parts: [{ text }] });
+          updateStatus();
+          return text;
+        } catch (err) {
+          clearTimeout(timeoutId);
+          if (chatHistory[chatHistory.length - 1]?.role === 'user') chatHistory.pop();
+          if (err.name === 'AbortError') {
+            throw new Error('Request timed out after 8s — check connection or key');
+          }
+          throw err;
+        }
       }
 
       function formatMarkdown(text) {
