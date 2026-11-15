@@ -30,7 +30,7 @@
     };
   </script>
   <style>
-    * { -webkit-tap-highlight-color: transparent; }
+    * { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
     body { background-color: #070b14; color: #f1f5f9; }
     ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -58,7 +58,7 @@
         <div>
           <div class="flex items-center gap-2">
             <h1 class="font-bold text-base sm:text-lg tracking-tight text-white">Rocketbot</h1>
-            <button id="secretTrigger" type="button" class="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full bg-sky-500/15 text-sky-300 border border-sky-500/30 select-none">NGN 110</button>
+            <button id="openKeyTrigger1" type="button" class="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full bg-sky-500/15 text-sky-300 border border-sky-500/30 active:scale-95">NGN 110</button>
           </div>
           <p class="text-xs text-slate-400">Team "The Elevators" &bull; Water Rocket Assistant</p>
         </div>
@@ -66,11 +66,11 @@
 
       <!-- Status Pill & Reset Only -->
       <div class="flex items-center gap-2">
-        <div id="statusBadge" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-300 text-xs font-medium">
+        <button id="openKeyTrigger2" type="button" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-300 text-xs font-medium active:scale-95">
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
           <span id="statusText">Verified Specs</span>
-        </div>
-        <button id="clearChatBtn" title="Reset Chat" class="p-2 rounded-lg bg-space-800 hover:bg-space-700 text-slate-300 hover:text-white border border-slate-700/70 transition">
+        </button>
+        <button id="clearChatBtn" type="button" title="Reset Chat" class="p-2 rounded-lg bg-space-800 hover:bg-space-700 text-slate-300 hover:text-white border border-slate-700/70 transition">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
           </svg>
@@ -88,19 +88,19 @@
   <footer class="shrink-0 bg-space-900/95 backdrop-blur-md border-t border-slate-800/80 px-4 pt-2.5 pb-4 z-20">
     <div class="max-w-3xl mx-auto space-y-2.5">
       <div id="quickPrompts" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-0.5">
-        <button data-prompt="Describe our 3D-printed water rocket design." class="chip-btn shrink-0 text-xs px-3 py-1.5 rounded-full bg-space-800 hover:bg-sky-500/20 text-slate-200 hover:text-sky-200 border border-slate-700/80 hover:border-sky-500/40 transition">
+        <button type="button" data-prompt="Describe our 3D-printed water rocket design." class="chip-btn shrink-0 text-xs px-3 py-1.5 rounded-full bg-space-800 hover:bg-sky-500/20 text-slate-200 hover:text-sky-200 border border-slate-700/80 hover:border-sky-500/40 transition">
           3D-printed design
         </button>
-        <button data-prompt="Why did we choose 3 swept trapezoidal fins and an ogive nose cone?" class="chip-btn shrink-0 text-xs px-3 py-1.5 rounded-full bg-space-800 hover:bg-sky-500/20 text-slate-200 hover:text-sky-200 border border-slate-700/80 hover:border-sky-500/40 transition">
+        <button type="button" data-prompt="Why did we choose 3 swept trapezoidal fins and an ogive nose cone?" class="chip-btn shrink-0 text-xs px-3 py-1.5 rounded-full bg-space-800 hover:bg-sky-500/20 text-slate-200 hover:text-sky-200 border border-slate-700/80 hover:border-sky-500/40 transition">
           Why 3 fins &amp; ogive?
         </button>
-        <button data-prompt="What are the mandatory NGN 110 safety rules?" class="chip-btn shrink-0 text-xs px-3 py-1.5 rounded-full bg-space-800 hover:bg-sky-500/20 text-slate-200 hover:text-sky-200 border border-slate-700/80 hover:border-sky-500/40 transition">
+        <button type="button" data-prompt="What are the mandatory NGN 110 safety rules?" class="chip-btn shrink-0 text-xs px-3 py-1.5 rounded-full bg-space-800 hover:bg-sky-500/20 text-slate-200 hover:text-sky-200 border border-slate-700/80 hover:border-sky-500/40 transition">
           NGN 110 safety rules
         </button>
-        <button data-prompt="What is the optimal water-to-air ratio and launch angle?" class="chip-btn shrink-0 text-xs px-3 py-1.5 rounded-full bg-space-800 hover:bg-sky-500/20 text-slate-200 hover:text-sky-200 border border-slate-700/80 hover:border-sky-500/40 transition">
+        <button type="button" data-prompt="What is the optimal water-to-air ratio and launch angle?" class="chip-btn shrink-0 text-xs px-3 py-1.5 rounded-full bg-space-800 hover:bg-sky-500/20 text-slate-200 hover:text-sky-200 border border-slate-700/80 hover:border-sky-500/40 transition">
           Water ratio &amp; angle
         </button>
-        <button data-prompt="How is our rocket sustainable?" class="chip-btn shrink-0 text-xs px-3 py-1.5 rounded-full bg-space-800 hover:bg-sky-500/20 text-slate-200 hover:text-sky-200 border border-slate-700/80 hover:border-sky-500/40 transition">
+        <button type="button" data-prompt="How is our rocket sustainable?" class="chip-btn shrink-0 text-xs px-3 py-1.5 rounded-full bg-space-800 hover:bg-sky-500/20 text-slate-200 hover:text-sky-200 border border-slate-700/80 hover:border-sky-500/40 transition">
           Sustainability
         </button>
       </div>
@@ -127,21 +127,21 @@
     </div>
   </footer>
 
-  <!-- Hidden Owner Key Modal (Opens only when NGN 110 pill is tapped 3 times) -->
+  <!-- API Key Modal (Opens with 1 tap on NGN 110 or Verified Specs pill) -->
   <div id="ownerModal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-space-900 border border-slate-700 rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl">
       <div class="flex items-center justify-between">
-        <h2 class="text-sm font-bold text-white">Owner Live AI Setup</h2>
-        <button id="closeOwnerModal" class="text-slate-400 hover:text-white text-sm">✕</button>
+        <h2 class="text-sm font-bold text-white">Gemini Live AI Key</h2>
+        <button id="closeOwnerModal" type="button" class="text-slate-400 hover:text-white text-base px-2">✕</button>
       </div>
       <p class="text-xs text-slate-300 leading-relaxed">
-        Paste your Google AI Studio key (<code class="text-sky-300">AIza...</code>) to activate live Gemini 2.5 Flash reasoning on this browser. Saved locally only.
+        Paste your Google AI Studio API key (<code class="text-sky-300">AQ...</code> or <code class="text-sky-300">AIza...</code>) to activate live Gemini 2.5 Flash reasoning. Saved only in your browser.
       </p>
-      <input id="apiKeyInput" type="password" placeholder="AIzaSy..." class="w-full bg-space-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500" />
-      <p id="keyErrorMsg" class="hidden text-xs text-rose-400"></p>
+      <input id="apiKeyInput" type="text" placeholder="Paste API key here..." class="w-full bg-space-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-sky-500" />
+      <p id="keyErrorMsg" class="hidden text-xs text-rose-400 break-words"></p>
       <div class="flex justify-end gap-2">
-        <button id="clearKeyBtn" class="px-3 py-1.5 rounded-lg text-xs bg-space-800 text-slate-300 hover:text-white border border-slate-700">Clear</button>
-        <button id="saveKeyBtn" class="px-4 py-1.5 rounded-lg text-xs font-semibold bg-sky-500 text-slate-950 hover:bg-sky-400">Save Key</button>
+        <button id="clearKeyBtn" type="button" class="px-3 py-2 rounded-lg text-xs bg-space-800 text-slate-300 hover:text-white border border-slate-700">Clear</button>
+        <button id="saveKeyBtn" type="button" class="px-4 py-2 rounded-lg text-xs font-semibold bg-sky-500 text-slate-950 hover:bg-sky-400">Save &amp; Activate</button>
       </div>
     </div>
   </div>
@@ -155,6 +155,8 @@
       const clearChatBtn = document.getElementById('clearChatBtn');
       const statusText = document.getElementById('statusText');
       const keyErrorMsg = document.getElementById('keyErrorMsg');
+      const ownerModal = document.getElementById('ownerModal');
+      const apiKeyInput = document.getElementById('apiKeyInput');
 
       function getStoredKey() {
         try { return localStorage.getItem('rb_owner_gemini_key') || ''; } catch (e) { return ''; }
@@ -171,7 +173,7 @@
 
       function updateStatus(mode) {
         if (mode === 'error') {
-          statusText.textContent = 'Key Error (Tap NGN 110)';
+          statusText.textContent = 'Key Error (Tap Here)';
         } else if (apiKey) {
           statusText.textContent = 'Gemini 2.5 Live';
         } else {
@@ -180,28 +182,20 @@
       }
       updateStatus();
 
-      let tapCount = 0;
-      let tapTimer = null;
-      const secretTrigger = document.getElementById('secretTrigger');
-      const ownerModal = document.getElementById('ownerModal');
-      const apiKeyInput = document.getElementById('apiKeyInput');
+      function openKeyModal() {
+        apiKeyInput.value = apiKey;
+        ownerModal.classList.remove('hidden');
+      }
 
-      secretTrigger.addEventListener('click', () => {
-        tapCount++;
-        clearTimeout(tapTimer);
-        tapTimer = setTimeout(() => { tapCount = 0; }, 1200);
-        if (tapCount >= 3) {
-          tapCount = 0;
-          keyErrorMsg.classList.add('hidden');
-          apiKeyInput.value = apiKey;
-          ownerModal.classList.remove('hidden');
-        }
-      });
+      // Single tap on either header badge opens the key popup immediately
+      document.getElementById('openKeyTrigger1').addEventListener('click', openKeyModal);
+      document.getElementById('openKeyTrigger2').addEventListener('click', openKeyModal);
 
       document.getElementById('closeOwnerModal').addEventListener('click', () => ownerModal.classList.add('hidden'));
       document.getElementById('saveKeyBtn').addEventListener('click', () => {
         apiKey = apiKeyInput.value.trim();
         setStoredKey(apiKey);
+        keyErrorMsg.classList.add('hidden');
         updateStatus();
         ownerModal.classList.add('hidden');
       });
@@ -209,6 +203,7 @@
         apiKey = '';
         apiKeyInput.value = '';
         setStoredKey('');
+        keyErrorMsg.classList.add('hidden');
         updateStatus();
         ownerModal.classList.add('hidden');
       });
@@ -279,10 +274,13 @@ Guardrail: If asked about unrelated topics (movies, homework, coding, general tr
         chatHistory.push({ role: 'user', parts: [{ text: userMessage }] });
         const recentHistory = chatHistory.slice(-8);
 
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`;
         const response = await fetch(url, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'x-goog-api-key': apiKey
+          },
           body: JSON.stringify({
             system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
             contents: recentHistory,
@@ -438,6 +436,4 @@ Guardrail: If asked about unrelated topics (movies, homework, coding, general tr
     })();
   </script>
 </body>
-</html>
-
 </html>
