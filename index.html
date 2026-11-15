@@ -116,7 +116,7 @@ tailwind.config = {
   const KB_STORE = 'rocketbot_kb';
   const TIMEOUT_MS = 8000;
   const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
-  const GROQ_MODEL = 'llama-3.3-70b-versatile';
+  const GROQ_MODELS = ['openai/gpt-oss-120b', 'openai/gpt-oss-20b'];  // tried in order; see console.groq.com/docs/models if Groq retires these
   const isGroq = (k) => /^gsk_/i.test(k);   // Groq keys start with gsk_; anything else is treated as a Google key
 
   const DEFAULT_KB = `TEAM: "The Elevators" — NGN 110 (Introduction to Engineering & Computing), American University of Sharjah, Fall 2026.
@@ -232,7 +232,7 @@ ${kb}
     } finally { clearTimeout(timer); }
   }
 
-  async function callGroq(key, contents, systemText, timeoutMs = TIMEOUT_MS) {
+  async function callGroqOnce(model, key, contents, systemText, timeoutMs) {
     try {
       const messages = [{ role: 'system', content: systemText }].concat(
         contents.map((c) => ({ role: c.role === 'model' ? 'assistant' : 'user', content: c.parts.map((p) => p.text).join('') }))
@@ -240,7 +240,7 @@ ${kb}
       const res = await timedFetch(GROQ_URL, timeoutMs, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
-        body: JSON.stringify({ model: GROQ_MODEL, messages, temperature: 0.4, max_tokens: 600 })
+        body: JSON.stringify({ model, messages, temperature: 0.4, max_tokens: 1200, reasoning_effort: 'low' })
       });
       const raw = await res.text();
       let data = null; try { data = JSON.parse(raw); } catch {}
@@ -255,6 +255,19 @@ ${kb}
       if (e.name === 'AbortError') throw new Error('Timed out after ' + (timeoutMs / 1000) + ' seconds with no response.');
       throw e;
     }
+  }
+
+  async function callGroq(key, contents, systemText, timeoutMs = TIMEOUT_MS) {
+    let lastErr;
+    for (const model of GROQ_MODELS) {
+      try { return await callGroqOnce(model, key, contents, systemText, timeoutMs); }
+      catch (e) {
+        lastErr = e;
+        // only move on to the next model if this one is missing / not accessible
+        if (!/HTTP (400|403|404)\b.*model/i.test(e.message)) throw e;
+      }
+    }
+    throw lastErr;
   }
 
   const callLLM = (key, contents, systemText, timeoutMs) =>
