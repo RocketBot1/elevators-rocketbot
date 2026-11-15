@@ -1,454 +1,357 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Rocketbot | Team "The Elevators" - NGN 110</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
-          },
-          colors: {
-            space: {
-              950: '#070b14',
-              900: '#0d1322',
-              800: '#161f35',
-              700: '#23304d',
-            }
-          }
-        }
-      }
-    };
-  </script>
-  <style>
-    * { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
-    body { background-color: #070b14; color: #f1f5f9; }
-    ::-webkit-scrollbar { width: 5px; height: 5px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #23304d; border-radius: 9999px; }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    @keyframes fadeSlideUp {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .msg-enter { animation: fadeSlideUp 0.22s ease-out forwards; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rocketbot • The Elevators • NGN 110</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: { extend: {
+    fontFamily: { sans: ['Inter','system-ui','sans-serif'], mono: ['JetBrains Mono','ui-monospace','monospace'] },
+    colors: { space: '#060a17', panel: '#0d1430', edge: '#1f2a52', flame: '#ff8a3d', ion: '#5ad1ff' }
+  } }
+};
+</script>
+<style>
+  html, body { height: 100%; }
+  body {
+    background-color: #060a17;
+    background-image:
+      radial-gradient(1.2px 1.2px at 12% 18%, #cfe6ff 50%, transparent 51%),
+      radial-gradient(1px 1px at 34% 72%, #9bb8e8 50%, transparent 51%),
+      radial-gradient(1.4px 1.4px at 58% 28%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 81% 61%, #cfe6ff 50%, transparent 51%),
+      radial-gradient(1.2px 1.2px at 92% 12%, #9bb8e8 50%, transparent 51%),
+      radial-gradient(1px 1px at 67% 90%, #fff 50%, transparent 51%),
+      radial-gradient(900px 500px at 85% -10%, rgba(90,209,255,.10), transparent 60%),
+      radial-gradient(700px 500px at -10% 110%, rgba(255,138,61,.08), transparent 60%);
+    background-attachment: fixed;
+  }
+  .msg-in { animation: pop .18s ease-out; }
+  @keyframes pop { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  .dot { animation: blink 1.2s infinite both; }
+  .dot:nth-child(2) { animation-delay: .2s; } .dot:nth-child(3) { animation-delay: .4s; }
+  @keyframes blink { 0%, 80%, 100% { opacity: .2; } 40% { opacity: 1; } }
+  .scroll-thin::-webkit-scrollbar { width: 6px; } .scroll-thin::-webkit-scrollbar-thumb { background: #1f2a52; border-radius: 3px; }
+  :focus-visible { outline: 2px solid #5ad1ff; outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { .msg-in, .dot { animation: none; } }
+  .bubble strong { color: #fff; font-weight: 600; }
+  .bubble code { font-family: 'JetBrains Mono', monospace; font-size: .85em; background: rgba(90,209,255,.12); padding: 1px 5px; border-radius: 4px; }
+</style>
 </head>
-<body class="h-[100dvh] flex flex-col overflow-hidden selection:bg-sky-500/30 selection:text-sky-200">
+<body class="font-sans text-slate-200 antialiased">
 
-  <!-- Header -->
-  <header class="shrink-0 bg-space-900/95 backdrop-blur-md border-b border-slate-800/80 px-4 py-3 z-20">
-    <div class="max-w-3xl mx-auto flex items-center justify-between gap-3">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-sky-500/20 border border-sky-400/30 shrink-0">
-          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
-          </svg>
-        </div>
-        <div>
-          <div class="flex items-center gap-2">
-            <h1 class="font-bold text-base sm:text-lg tracking-tight text-white">Rocketbot</h1>
-            <button id="openKeyTrigger1" type="button" class="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full bg-sky-500/15 text-sky-300 border border-sky-500/30 active:scale-95">NGN 110</button>
-          </div>
-          <p class="text-xs text-slate-400">Team "The Elevators" &bull; Water Rocket Assistant</p>
-        </div>
-      </div>
+<div class="mx-auto flex h-[100dvh] max-w-3xl flex-col" style="padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);">
 
-      <!-- Status Pill & Reset Only -->
-      <div class="flex items-center gap-2">
-        <button id="openKeyTrigger2" type="button" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-300 text-xs font-medium active:scale-95">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span id="statusText">Verified Specs</span>
-        </button>
-        <button id="clearChatBtn" type="button" title="Reset Chat" class="p-2 rounded-lg bg-space-800 hover:bg-space-700 text-slate-300 hover:text-white border border-slate-700/70 transition">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-          </svg>
-        </button>
-      </div>
+  <!-- HEADER -->
+  <header class="flex items-center gap-3 border-b border-edge bg-space/80 px-4 py-3 backdrop-blur">
+    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-edge bg-panel" aria-hidden="true">
+      <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="#ff8a3d" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2c3 2.5 4.5 6 4.5 10v4h-9v-4c0-4 1.5-7.500 4.500-10z"/><circle cx="12" cy="9.5" r="1.6"/><path d="M7.500 13l-2.500 3.500v2l2.500-1.500M16.500 13l2.500 3.500v2l-2.500-1.500M10 19.500c.5 1.500 1 2.500 2 3 1-.5 1.500-1.500 2-3"/>
+      </svg>
     </div>
+    <div class="min-w-0 flex-1">
+      <div class="flex items-center gap-2">
+        <h1 class="text-lg font-bold leading-none tracking-tight text-white">Rocketbot</h1>
+        <button id="badge" type="button" class="select-none rounded-md border border-flame/40 bg-flame/10 px-1.5 py-0.5 font-mono text-[11px] font-semibold text-flame">NGN 110</button>
+      </div>
+      <p class="mt-1 truncate text-xs text-slate-400">Team 'The Elevators' • Water Rocket Assistant</p>
+    </div>
+    <button id="pill" type="button" class="flex shrink-0 items-center gap-1.5 rounded-full border border-edge bg-panel px-2.5 py-1 text-[11px] font-medium text-slate-300">
+      <span id="pillDot" class="h-2 w-2 rounded-full bg-amber-400"></span><span id="pillText">Offline mode</span>
+    </button>
+    <button id="reset" type="button" class="shrink-0 rounded-lg border border-edge px-2.5 py-1.5 text-xs font-medium text-slate-300 hover:border-ion/60 hover:text-white">Reset Chat</button>
   </header>
 
-  <!-- Chat Stream -->
-  <main id="chatContainer" class="flex-1 overflow-y-auto px-4 py-5 space-y-4">
-    <div id="messagesList" class="max-w-3xl mx-auto space-y-4 pb-2"></div>
-  </main>
+  <!-- CHAT -->
+  <main id="chat" class="scroll-thin flex-1 space-y-3 overflow-y-auto px-4 py-4" aria-live="polite"></main>
 
-  <!-- Starter Chips & Input Bar -->
-  <footer class="shrink-0 bg-space-900/95 backdrop-blur-md border-t border-slate-800/80 px-4 pt-2.5 pb-4 z-20">
-    <div class="max-w-3xl mx-auto space-y-2.5">
-      <div id="quickPrompts" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-0.5">
-        <button type="button" data-prompt="Describe our 3D-printed water rocket design." class="chip-btn shrink-0 text-xs px-3 py-1.5 rounded-full bg-space-800 hover:bg-sky-500/20 text-slate-200 hover:text-sky-200 border border-slate-700/80 hover:border-sky-500/40 transition">
-          3D-printed design
-        </button>
-        <button type="button" data-prompt="Why did we choose 3 swept trapezoidal fins and an ogive nose cone?" class="chip-btn shrink-0 text-xs px-3 py-1.5 rounded-full bg-space-800 hover:bg-sky-500/20 text-slate-200 hover:text-sky-200 border border-slate-700/80 hover:border-sky-500/40 transition">
-          Why 3 fins &amp; ogive?
-        </button>
-        <button type="button" data-prompt="What are the mandatory NGN 110 safety rules?" class="chip-btn shrink-0 text-xs px-3 py-1.5 rounded-full bg-space-800 hover:bg-sky-500/20 text-slate-200 hover:text-sky-200 border border-slate-700/80 hover:border-sky-500/40 transition">
-          NGN 110 safety rules
-        </button>
-        <button type="button" data-prompt="What is the optimal water-to-air ratio and launch angle?" class="chip-btn shrink-0 text-xs px-3 py-1.5 rounded-full bg-space-800 hover:bg-sky-500/20 text-slate-200 hover:text-sky-200 border border-slate-700/80 hover:border-sky-500/40 transition">
-          Water ratio &amp; angle
-        </button>
-        <button type="button" data-prompt="How is our rocket sustainable?" class="chip-btn shrink-0 text-xs px-3 py-1.5 rounded-full bg-space-800 hover:bg-sky-500/20 text-slate-200 hover:text-sky-200 border border-slate-700/80 hover:border-sky-500/40 transition">
-          Sustainability
-        </button>
-      </div>
+  <!-- SUGGESTIONS -->
+  <div id="chips" class="scroll-thin flex gap-2 overflow-x-auto px-4 pb-2"></div>
 
-      <form id="chatForm" class="flex items-end gap-2">
-        <div class="flex-1 bg-space-800 border border-slate-700/90 focus-within:border-sky-500/70 rounded-2xl px-3.5 py-2.5 transition shadow-inner">
-          <textarea
-            id="userInput"
-            rows="1"
-            placeholder="Ask Rocketbot about Team The Elevators' rocket..."
-            class="w-full bg-transparent text-sm text-white placeholder-slate-400 focus:outline-none resize-none max-h-28 leading-relaxed"
-          ></textarea>
-        </div>
-        <button
-          type="submit"
-          id="sendBtn"
-          class="h-11 w-11 rounded-2xl bg-sky-500 hover:bg-sky-400 active:scale-95 text-slate-950 font-semibold flex items-center justify-center shrink-0 transition shadow-lg shadow-sky-500/20 disabled:opacity-40"
-        >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-          </svg>
-        </button>
-      </form>
+  <!-- INPUT -->
+  <form id="form" class="flex items-end gap-2 border-t border-edge bg-space/80 px-4 py-3 backdrop-blur">
+    <textarea id="input" rows="1" placeholder="Ask about our rocket…" class="max-h-28 min-h-[44px] flex-1 resize-none rounded-xl border border-edge bg-panel px-3.5 py-2.5 text-base text-white placeholder-slate-500 focus:border-ion/70 focus:outline-none"></textarea>
+    <button id="send" type="submit" class="h-11 shrink-0 rounded-xl bg-flame px-4 text-sm font-semibold text-slate-950 hover:brightness-110 disabled:opacity-50">Send</button>
+  </form>
+</div>
+
+<!-- OWNER MODAL (hidden from visitors) -->
+<div id="modal" class="fixed inset-0 z-50 hidden items-end justify-center bg-black/70 p-3 sm:items-center" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="scroll-thin max-h-[92dvh] w-full max-w-xl overflow-y-auto rounded-2xl border border-edge bg-panel p-5 shadow-2xl">
+    <div class="mb-4 flex items-center justify-between">
+      <h2 id="modalTitle" class="text-base font-semibold text-white">Owner settings</h2>
+      <button id="closeModal" type="button" class="rounded-lg px-2 py-1 text-slate-400 hover:text-white" aria-label="Close">✕</button>
     </div>
-  </footer>
 
-  <!-- Private Owner Key Modal -->
-  <div id="ownerModal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-space-900 border border-slate-700 rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl">
-      <div class="flex items-center justify-between">
-        <h2 class="text-sm font-bold text-white">Private Gemini Live Key</h2>
-        <button id="closeOwnerModal" type="button" class="text-slate-400 hover:text-white text-base px-2">✕</button>
-      </div>
-      <p class="text-xs text-slate-300 leading-relaxed">
-        Stored locally in <strong>your browser only</strong> (never uploaded to GitHub or shared with visitors).
-      </p>
-      <input id="apiKeyInput" type="password" autocomplete="off" placeholder="••••••••••••••••••••" class="w-full bg-space-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-sky-500" />
-      <p id="keyErrorMsg" class="hidden text-xs text-rose-400 break-words"></p>
-      <div class="flex justify-end gap-2">
-        <button id="clearKeyBtn" type="button" class="px-3 py-2 rounded-lg text-xs bg-space-800 text-slate-300 hover:text-white border border-slate-700">Remove</button>
-        <button id="saveKeyBtn" type="button" class="px-4 py-2 rounded-lg text-xs font-semibold bg-sky-500 text-slate-950 hover:bg-sky-400">Save Privately</button>
-      </div>
+    <label for="apiKey" class="mb-1 block text-sm font-medium text-slate-300">Google AI Studio API key</label>
+    <input id="apiKey" type="password" autocomplete="off" spellcheck="false" placeholder="AQ.… or AIza…" class="w-full rounded-lg border border-edge bg-space px-3 py-2 font-mono text-sm text-white focus:border-ion/70 focus:outline-none">
+    <p class="mt-1 text-xs text-slate-500">Stored only in this browser's localStorage. Sent only to Google as the <span class="font-mono">x-goog-api-key</span> header.</p>
+
+    <label for="kb" class="mb-1 mt-4 block text-sm font-medium text-slate-300">Knowledge base</label>
+    <textarea id="kb" rows="10" class="scroll-thin w-full rounded-lg border border-edge bg-space px-3 py-2 font-mono text-xs leading-relaxed text-slate-200 focus:border-ion/70 focus:outline-none"></textarea>
+
+    <div id="modalStatus" class="mt-3 hidden whitespace-pre-wrap break-words rounded-lg border px-3 py-2 font-mono text-xs"></div>
+
+    <div class="mt-4 flex flex-wrap gap-2">
+      <button id="saveBtn" type="button" class="rounded-lg bg-flame px-4 py-2 text-sm font-semibold text-slate-950 hover:brightness-110">Save</button>
+      <button id="testBtn" type="button" class="rounded-lg border border-ion/50 px-4 py-2 text-sm font-medium text-ion hover:bg-ion/10">Test key</button>
+      <button id="clearKey" type="button" class="rounded-lg border border-edge px-4 py-2 text-sm text-slate-300 hover:text-white">Remove key</button>
+      <button id="resetKb" type="button" class="rounded-lg border border-edge px-4 py-2 text-sm text-slate-300 hover:text-white">Restore default KB</button>
     </div>
   </div>
+</div>
 
-  <script>
-    (function () {
-      const messagesList = document.getElementById('messagesList');
-      const chatContainer = document.getElementById('chatContainer');
-      const chatForm = document.getElementById('chatForm');
-      const userInput = document.getElementById('userInput');
-      const clearChatBtn = document.getElementById('clearChatBtn');
-      const statusText = document.getElementById('statusText');
-      const keyErrorMsg = document.getElementById('keyErrorMsg');
-      const ownerModal = document.getElementById('ownerModal');
-      const apiKeyInput = document.getElementById('apiKeyInput');
+<script>
+(() => {
+  'use strict';
 
-      function getStoredKey() {
-        try { return localStorage.getItem('rb_owner_gemini_key') || ''; } catch (e) { return ''; }
-      }
-      function setStoredKey(val) {
-        try {
-          if (val) localStorage.setItem('rb_owner_gemini_key', val);
-          else localStorage.removeItem('rb_owner_gemini_key');
-        } catch (e) {}
-      }
+  /* ---------- CONFIG ---------- */
+  const MODEL_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent';
+  const KEY_STORE = 'rocketbot_api_key';
+  const KB_STORE = 'rocketbot_kb';
+  const TIMEOUT_MS = 8000;
 
-      let apiKey = getStoredKey();
-      let chatHistory = [];
+  const DEFAULT_KB = `TEAM: "The Elevators" — NGN 110 (Introduction to Engineering & Computing), American University of Sharjah, Fall 2026.
 
-      function updateStatus(mode) {
-        if (mode === 'error') {
-          statusText.textContent = 'Key Error (Tap Here)';
-        } else if (apiKey) {
-          statusText.textContent = 'Gemini 3.8 Live';
-        } else {
-          statusText.textContent = 'Verified Specs';
-        }
-      }
-      updateStatus();
+DESIGN: Custom matte black 3D-printed aerodynamic fuselage sleeve and pointed ogive nose cone, fitted snugly over a clear PET plastic beverage bottle that serves as the pressure core.
 
-      function openKeyModal() {
-        apiKeyInput.value = apiKey;
-        ownerModal.classList.remove('hidden');
-      }
+FINS: 3 swept trapezoidal fins, 3D-printed directly as part of the lower cylindrical fuselage sleeve. This eliminates fin flutter, crooked gluing, and mid-flight detachment. 3 fins balance stability with lower weight and drag than 4 fins.
 
-      document.getElementById('openKeyTrigger1').addEventListener('click', openKeyModal);
-      document.getElementById('openKeyTrigger2').addEventListener('click', openKeyModal);
+NOZZLE & LENGTH: The PET bottle neck is left exposed at the bottom so it fits the competition electric launcher. Total length is strictly under 50 cm.
 
-      document.getElementById('closeOwnerModal').addEventListener('click', () => ownerModal.classList.add('hidden'));
-      document.getElementById('saveKeyBtn').addEventListener('click', () => {
-        apiKey = apiKeyInput.value.trim();
-        setStoredKey(apiKey);
-        keyErrorMsg.classList.add('hidden');
-        updateStatus();
-        ownerModal.classList.add('hidden');
+PHYSICS & PROPELLANT: Compressed air + tap water only (about 30-35% water by volume, 65-70% air). Thrust follows Newton's Third Law: F = m_dot * v_e (mass flow rate times exhaust velocity). The optimal launch angle for maximum horizontal distance is about 42-45 degrees.
+
+STABILITY: The ogive nose cone cuts frontal pressure drag and pulls the Center of Gravity (CG) forward. The 3 swept rear fins pull the Center of Pressure (CP) aft, giving a positive static margin (CP behind CG).
+
+SUSTAINABILITY: Upcycles a single-use post-consumer PET bottle. The modular 3D-printed nose cone and fin sleeve slide on without permanent destructive glue, so the shell is reusable across launches. Zero chemical exhaust.
+
+NGN 110 SAFETY RULES: Max 50 cm total length. Tap water + compressed air only (no metal or sharp tips). Mandatory safety goggles for everyone in the launch zone. Minimum 15-foot (4.5 m) safety perimeter during pressurization and launch.
+
+GUARDRAIL: Politely decline unrelated off-topic questions and redirect back to Team "The Elevators'" water rocket project.`;
+
+  const SYSTEM_PROMPT = (kb) => `You are Rocketbot, the water rocket assistant for Team "The Elevators" (NGN 110, American University of Sharjah, Fall 2026).
+
+Think carefully before answering. Answer ONLY the exact question the user asked, in a concise, conversational engineering tone (usually 2-4 sentences). NEVER dump or recite the whole knowledge base, and do not add facts the user did not ask about. Use plain text; **bold** is fine for a key term. Ground every answer in the knowledge base below; if the knowledge base does not cover something, say so briefly and reason from basic engineering principles without inventing team facts or numbers.
+
+If the question is unrelated to the team's water rocket project, politely decline in one sentence and redirect to the project (design, fins, nose cone, water ratio, launch angle, stability, safety, sustainability).
+
+KNOWLEDGE BASE:
+"""
+${kb}
+"""`;
+
+  /* ---------- STATE / HELPERS ---------- */
+  const $ = (id) => document.getElementById(id);
+  const chat = $('chat'), input = $('input'), sendBtn = $('send'), form = $('form');
+  const store = {
+    get: (k) => { try { return localStorage.getItem(k); } catch { return null; } },
+    set: (k, v) => { try { localStorage.setItem(k, v); } catch {} },
+    del: (k) => { try { localStorage.removeItem(k); } catch {} }
+  };
+  const getKey = () => (store.get(KEY_STORE) || '').trim();
+  const getKB = () => store.get(KB_STORE) || DEFAULT_KB;
+  let history = [];          // {role:'user'|'model', text}
+  let busy = false;
+  let lastError = '';
+
+  const esc = (s) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const fmt = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/`([^`]+)`/g, '<code>$1</code>').replace(/\n/g, '<br>');
+
+  function addMsg(role, text, note) {
+    const row = document.createElement('div');
+    row.className = 'msg-in flex ' + (role === 'user' ? 'justify-end' : 'justify-start');
+    const b = document.createElement('div');
+    b.className = 'bubble max-w-[85%] rounded-2xl px-3.5 py-2.5 text-[15px] leading-relaxed ' +
+      (role === 'user' ? 'rounded-br-md bg-flame text-slate-950' : 'rounded-bl-md border border-edge bg-panel text-slate-200');
+    b.innerHTML = fmt(text) + (note ? `<div class="mt-1.5 text-[11px] text-slate-500">${esc(note)}</div>` : '');
+    row.appendChild(b);
+    chat.appendChild(row);
+    chat.scrollTop = chat.scrollHeight;
+    return row;
+  }
+  function addTyping() {
+    const row = document.createElement('div');
+    row.className = 'msg-in flex justify-start';
+    row.innerHTML = '<div class="flex items-center gap-1 rounded-2xl rounded-bl-md border border-edge bg-panel px-4 py-3" aria-label="Thinking"><span class="dot h-1.5 w-1.5 rounded-full bg-ion"></span><span class="dot h-1.5 w-1.5 rounded-full bg-ion"></span><span class="dot h-1.5 w-1.5 rounded-full bg-ion"></span></div>';
+    chat.appendChild(row); chat.scrollTop = chat.scrollHeight;
+    return row;
+  }
+  function updatePill() {
+    const on = !!getKey();
+    $('pillDot').className = 'h-2 w-2 rounded-full ' + (on ? 'bg-emerald-400' : 'bg-amber-400');
+    $('pillText').textContent = on ? 'Gemini online' : 'Offline mode';
+  }
+
+  /* ---------- OFFLINE FALLBACK ---------- */
+  const OFFLINE = [
+    { k: /nose|cone|ogive|drag/i, a: "Our nose cone is a pointed **ogive**, 3D-printed in matte black. It cuts frontal pressure drag and also pulls the **Center of Gravity** forward, which helps keep the rocket stable. It slides on over the PET bottle with no permanent glue." },
+    { k: /\bfins?\b|flutter|swept|trapezoid/i, a: "We use **3 swept trapezoidal fins** printed directly into the lower fuselage sleeve. Printing them as one piece eliminates fin flutter, crooked gluing, and mid-flight detachment, and 3 fins give good stability with less weight and drag than 4." },
+    { k: /water|ratio|fill|volume|propellant|percent|%/i, a: "We fill the bottle to about **30-35% water** and leave **65-70% air**. The compressed air pushes the water out of the nozzle, and only tap water and compressed air are allowed." },
+    { k: /angle|degree|distance|range|trajectory/i, a: "For maximum horizontal distance, the best launch angle is about **42°-45°**. It's slightly under 45° in practice because of drag and the thrust phase." },
+    { k: /safe|goggle|perimeter|rule|danger|metal|sharp/i, a: "NGN 110 safety rules: total length under **50 cm**, **tap water + compressed air only** (no metal or sharp tips), **safety goggles** for everyone in the launch zone, and a minimum **15 ft (4.5 m)** safety perimeter during pressurization and launch." },
+    { k: /sustain|recycl|reus|eco|environment|upcycl|green|glue/i, a: "We **upcycle a single-use PET bottle** as the pressure core. The 3D-printed nose cone and fin sleeve slide on without destructive glue, so the shell is reusable across launches, and there's zero chemical exhaust." },
+    { k: /stabil|center of (gravity|pressure)|\bcg\b|\bcp\b|margin/i, a: "Stability comes from having the **CP behind the CG**. The ogive nose cone moves the CG forward and the 3 swept rear fins move the CP aft, which gives a positive static margin." },
+    { k: /thrust|newton|physics|force|exhaust|velocity|how.*(work|fly)/i, a: "Thrust comes from **Newton's Third Law**: the rocket expels water backward and is pushed forward. In equation form, $F = \\dot{m}\\,v_e$ (mass flow rate times exhaust velocity)." },
+    { k: /nozzle|launcher|length|long|50\s?cm|neck|size|tall/i, a: "The PET bottle neck stays **exposed at the bottom** so it fits the competition electric launcher. The whole rocket is **strictly under 50 cm**." },
+    { k: /design|made|material|print|matte|fuselage|sleeve|bottle|build|rocket/i, a: "Our rocket is a clear **PET bottle pressure core** wrapped in a custom **matte black 3D-printed fuselage sleeve** with an ogive nose cone on top and 3 swept fins built into the lower sleeve." },
+    { k: /team|elevators|who|ngn|aus|sharjah|course|class/i, a: "We're **The Elevators**, a team in NGN 110 (Introduction to Engineering & Computing) at the American University of Sharjah, Fall 2026." }
+  ];
+  function offlineAnswer(q) {
+    if (/^\s*(hi|hello|hey|salam|marhaba)\b/i.test(q)) return "Hi! I'm Rocketbot, the assistant for Team The Elevators' water rocket. Ask me about our nose cone, fins, water ratio, launch angle, stability, safety rules, or sustainability.";
+    const hit = OFFLINE.find((o) => o.k.test(q));
+    if (hit) return hit.a.replace(/\$F = \\dot\{m\}\\,v_e\$/, '`F = ṁ · v_e`');
+    return "I can only help with Team The Elevators' water rocket project. Try asking about the nose cone, fins, water ratio, launch angle, stability, safety rules, or sustainability.";
+  }
+
+  /* ---------- GEMINI ---------- */
+  async function callGemini(key, contents, systemText, timeoutMs = TIMEOUT_MS) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+    try {
+      const res = await fetch(MODEL_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: systemText }] },
+          contents,
+          generationConfig: { temperature: 0.4, maxOutputTokens: 600 }
+        }),
+        signal: ctrl.signal
       });
-      document.getElementById('clearKeyBtn').addEventListener('click', () => {
-        apiKey = '';
-        apiKeyInput.value = '';
-        setStoredKey('');
-        keyErrorMsg.classList.add('hidden');
-        updateStatus();
-        ownerModal.classList.add('hidden');
-      });
-
-      const SYSTEM_PROMPT = `You are Rocketbot, the smart engineering assistant for Team "The Elevators" in NGN 110 (Introduction to Engineering & Computing, American University of Sharjah, Fall 2026).
-
-INSTRUCTIONS:
-- Think carefully and answer ONLY the exact question asked in a clear, conversational, helpful tone.
-- NEVER dump the entire specification sheet unless the user explicitly asks for a full overview.
-- Use the verified project facts below to reason through "why" and "how" engineering questions naturally:
-
-TEAM "THE ELEVATORS" VERIFIED SPECS:
-- Airframe: Custom matte black 3D-printed aerodynamic fuselage sleeve and pointed ogive nose cone fitted snugly over a clear PET plastic beverage bottle pressure core.
-- Fins: 3 swept trapezoidal fins 3D-printed directly as part of the lower cylindrical fuselage sleeve (prevents fin flutter, glue failure, and misalignment; 3 fins balance stability with lower drag and weight than 4 fins).
-- Nozzle: Exposed PET bottle neck at the bottom so it mounts cleanly on the official competition electric launcher.
-- Length Constraint: Strictly under 50 cm total length from nozzle to nose cone tip.
-- Propellant & Physics: Compressed air + tap water only (~30–35% water volume, 65–70% air). Thrust via Newton's Third Law (F = m_dot * v_e). Optimal horizontal distance launch angle ~42°–45°.
-- Stability: Ogive nose cone cuts pressure drag and moves Center of Gravity (CG) forward; 3 swept fins move Center of Pressure (CP) aft for positive static margin.
-- Sustainability: Upcycles a post-consumer PET plastic bottle; reusable modular 3D-printed shell slips onto fresh bottles without destructive glue; zero chemical emissions.
-- NGN 110 Safety Rules: Max 50 cm length, tap water + compressed air only, mandatory safety goggles for everyone in launch zone, minimum 15-foot (4.5 m) safety perimeter during pressurization/launch.
-
-Guardrail: If asked about unrelated topics (movies, homework, coding, general trivia), politely decline and steer the conversation back to Team "The Elevators'" water rocket project.`;
-
-      function getTargetedOfflineReply(rawQuery) {
-        const q = rawQuery.toLowerCase().trim();
-
-        if (/^(hi|hello|hey|yo|sup|greetings)\b/.test(q)) {
-          return `Hey! I'm **Rocketbot** for **Team "The Elevators"**. Ask me anything specific about our **3D-printed ogive nose cone**, **3 swept fins**, **water-to-air ratio**, **launch angle**, or **NGN 110 safety rules**!`;
-        }
-        if (/(nose|cone|ogive)/.test(q)) {
-          return `Our **3D-printed matte black ogive nose cone** reduces frontal aerodynamic drag by smoothly parting airflow and shifts the **Center of Gravity (CG)** forward so the rocket flies straight without tumbling.`;
-        }
-        if (/(fin|fins|trapezoidal|3 fin|three fin)/.test(q)) {
-          return `We use **3 swept trapezoidal fins** 3D-printed directly into the lower cylindrical fuselage sleeve. Three fins give full 3-axis roll/pitch/yaw stabilization with less weight and skin-friction drag than 4 fins, while unified 3D printing eliminates fin flutter and glue failure.`;
-        }
-        if (/(bottle|pet|core|pressure chamber|material)/.test(q)) {
-          return `The core is a **clear PET plastic beverage bottle** chosen for its high burst strength and light weight, wrapped in a custom **matte black 3D-printed sleeve** with the bottle nozzle left exposed at the base for the electric launcher.`;
-        }
-        if (/(length|50|size|tall|long|dimension)/.test(q)) {
-          return `NGN 110 strictly caps total rocket length at **50 cm** from the bottom of the bottle nozzle to the tip of our 3D-printed ogive nose cone.`;
-        }
-        if (/(water|ratio|how much water|fill|percent|30%|35%)/.test(q)) {
-          return `The sweet spot is filling roughly **30% to 35% (about one-third)** of the PET bottle with tap water and leaving **65%–70%** for compressed air—enough water mass for strong momentum without carrying dead weight.`;
-        }
-        if (/(angle|45|degree|trajectory|distance|far)/.test(q)) {
-          return `For maximum horizontal distance on the field, a launch angle around **42° to 45°** gives the best balance between upward lift and forward velocity while accounting for air drag.`;
-        }
-        if (/(goggle|15|feet|ft|perimeter|safe|safety|rule)/.test(q)) {
-          return `Mandatory **NGN 110 safety rules**:\n- Wear **approved safety goggles** in the launch zone.\n- Stay at least **15 feet (4.5 m)** back during pressurization and launch.\n- Use **tap water and compressed air only** (no metal or sharp tips) and keep total length under **50 cm**.`;
-        }
-        if (/(sustain|recycle|reuse|green|environment|eco|circular)/.test(q)) {
-          return `Our rocket upcycles a single-use **PET plastic bottle** as its pressure vessel, and the **3D-printed nose cone and fin sleeve** slide on without permanent glue—meaning the entire aerodynamic shell is reusable across launches.`;
-        }
-        if (/(design|3d|print|built|build|rocket|overview|describe)/.test(q)) {
-          return `Team **"The Elevators"** built a **3D-printed aerodynamic sleeve and ogive nose cone** (matte black) fitted over a **clear PET bottle** core, featuring **3 integrated swept trapezoidal fins** and an exposed nozzle for the electric launcher—all under the **50 cm** limit.`;
-        }
-        if (/(stabil|drag|cg|cp|center of)/.test(q)) {
-          return `Stability comes from keeping the **Center of Gravity (CG)** ahead of the **Center of Pressure (CP)**: our forward **3D-printed ogive nose cone** pulls CG forward while the **3 swept rear fins** pull CP backward.`;
-        }
-        if (/(physic|thrust|newton|work|propulsion)/.test(q)) {
-          return `It works by **Newton's Third Law**: compressed air forces dense tap water out of the nozzle at high speed, creating an equal and opposite upward thrust force ($F = \\dot{m} v_e$).`;
-        }
-
-        return `I'm **Rocketbot**, built exclusively for **Team "The Elevators'" NGN 110 Water Rocket**. Try asking a specific question about our **3D-printed nose cone**, **3 swept fins**, **water ratio**, **launch angle**, or **safety rules**!`;
+      const raw = await res.text();
+      let data = null; try { data = JSON.parse(raw); } catch {}
+      if (!res.ok) {
+        const msg = (data && data.error && data.error.message) || raw.slice(0, 300) || res.statusText;
+        throw new Error(`HTTP ${res.status} ${res.statusText}: ${msg}`);
       }
-
-      async function getGeminiReply(userMessage) {
-        chatHistory.push({ role: 'user', parts: [{ text: userMessage }] });
-        const recentHistory = chatHistory.slice(-8);
-
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 8000);
-
-        try {
-          const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent`;
-          const response = await fetch(url, {
-            method: 'POST',
-            signal: controller.signal,
-            headers: {
-              'Content-Type': 'application/json',
-              'x-goog-api-key': apiKey
-            },
-            body: JSON.stringify({
-              system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
-              contents: recentHistory,
-              generationConfig: { temperature: 0.5, maxOutputTokens: 350 }
-            })
-          });
-
-          clearTimeout(timeoutId);
-
-          if (!response.ok) {
-            chatHistory.pop();
-            const errData = await response.json().catch(() => ({}));
-            throw new Error(errData?.error?.message || `HTTP ${response.status}`);
-          }
-
-          const data = await response.json();
-          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (!text) {
-            chatHistory.pop();
-            throw new Error('Empty response from Gemini');
-          }
-
-          chatHistory.push({ role: 'model', parts: [{ text }] });
-          updateStatus();
-          return text;
-        } catch (err) {
-          clearTimeout(timeoutId);
-          if (chatHistory[chatHistory.length - 1]?.role === 'user') chatHistory.pop();
-          if (err.name === 'AbortError') {
-            throw new Error('Request timed out after 8s — check connection or key');
-          }
-          throw err;
-        }
+      const parts = data && data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts;
+      const text = parts ? parts.map((p) => p.text || '').join('').trim() : '';
+      if (!text) {
+        const why = (data && data.promptFeedback && data.promptFeedback.blockReason) || (data && data.candidates && data.candidates[0] && data.candidates[0].finishReason) || 'empty response';
+        throw new Error('No text returned (' + why + ')');
       }
+      return text;
+    } catch (e) {
+      if (e.name === 'AbortError') throw new Error('Timed out after ' + (timeoutMs / 1000) + ' seconds with no response.');
+      throw e;
+    } finally { clearTimeout(timer); }
+  }
 
-      function formatMarkdown(text) {
-        let html = text
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;');
-
-        html = html.replace(/^### (.*$)/gim, '<h3 class="text-sm font-semibold text-sky-300 mt-1 mb-1.5">$1</h3>');
-        html = html.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-white">$1</strong>');
-        html = html.replace(/\$([^$]+)\$/g, '<code class="font-mono text-xs px-1.5 py-0.5 rounded bg-slate-800 text-sky-300">$1</code>');
-
-        const lines = html.split('\n');
-        let inList = false;
-        const processed = [];
-
-        for (const line of lines) {
-          if (/^[-*] /.test(line)) {
-            if (!inList) {
-              processed.push('<ul class="list-disc pl-5 space-y-1 my-1 text-slate-200">');
-              inList = true;
-            }
-            processed.push(`<li>${line.slice(2)}</li>`);
-          } else {
-            if (inList) {
-              processed.push('</ul>');
-              inList = false;
-            }
-            if (line.trim() === '') {
-              processed.push('<div class="h-1.5"></div>');
-            } else if (!line.startsWith('<h3')) {
-              processed.push(`<p class="leading-relaxed">${line}</p>`);
-            } else {
-              processed.push(line);
-            }
-          }
-        }
-        if (inList) processed.push('</ul>');
-        return processed.join('');
+  /* ---------- SEND FLOW ---------- */
+  async function send(text) {
+    text = text.trim();
+    if (!text || busy) return;
+    busy = true; sendBtn.disabled = true;
+    addMsg('user', text);
+    input.value = ''; autoGrow();
+    const typing = addTyping();
+    const key = getKey();
+    let reply, note = '';
+    if (key) {
+      try {
+        const contents = history.slice(-8).concat([{ role: 'user', text }])
+          .map((m) => ({ role: m.role, parts: [{ text: m.text }] }));
+        reply = await callGemini(key, contents, SYSTEM_PROMPT(getKB()));
+        lastError = '';
+      } catch (e) {
+        lastError = e.message;
+        reply = offlineAnswer(text);
+        note = 'Offline answer — Gemini request failed.';
       }
+    } else {
+      reply = offlineAnswer(text);
+    }
+    typing.remove();
+    addMsg('model', reply, note);
+    history.push({ role: 'user', text }, { role: 'model', text: reply });
+    busy = false; sendBtn.disabled = false;
+    input.focus();
+  }
 
-      function appendMessage(role, content, isTyping = false) {
-        const wrapper = document.createElement('div');
-        wrapper.className = `msg-enter flex ${role === 'user' ? 'justify-end' : 'justify-start'}`;
+  /* ---------- UI WIRING ---------- */
+  function welcome() {
+    chat.innerHTML = '';
+    history = [];
+    addMsg('model', "Hi, I'm **Rocketbot**. I can answer questions about Team The Elevators' water rocket for NGN 110. What would you like to know?");
+  }
+  const CHIPS = ['Why a pointed nose cone?', 'Why 3 fins?', 'How much water do we use?', 'Best launch angle?', 'Safety rules', 'How is it sustainable?'];
+  CHIPS.forEach((c) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.textContent = c;
+    b.className = 'shrink-0 rounded-full border border-edge bg-panel px-3 py-1.5 text-xs text-slate-300 hover:border-ion/60 hover:text-white';
+    b.addEventListener('click', () => send(c));
+    $('chips').appendChild(b);
+  });
 
-        if (role === 'user') {
-          wrapper.innerHTML = `
-            <div class="max-w-[85%] sm:max-w-[75%] rounded-2xl rounded-br-sm bg-sky-500 text-slate-950 font-medium px-4 py-2.5 text-sm shadow-md">
-              ${content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}
-            </div>
-          `;
-        } else {
-          wrapper.innerHTML = `
-            <div class="flex items-start gap-2.5 max-w-[92%] sm:max-w-[84%]">
-              <div class="w-7 h-7 rounded-lg bg-sky-500/15 border border-sky-500/30 text-sky-400 flex items-center justify-center shrink-0 mt-0.5 text-xs font-mono font-bold">
-                RB
-              </div>
-              <div class="rounded-2xl rounded-tl-sm bg-space-900 border border-slate-800/90 px-4 py-3 text-sm text-slate-200 shadow-md">
-                ${isTyping ? '<span class="text-slate-400 animate-pulse">Thinking...</span>' : formatMarkdown(content)}
-              </div>
-            </div>
-          `;
-        }
+  function autoGrow() { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 112) + 'px'; }
+  input.addEventListener('input', autoGrow);
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); } });
+  form.addEventListener('submit', (e) => { e.preventDefault(); send(input.value); });
+  $('reset').addEventListener('click', welcome);
 
-        messagesList.appendChild(wrapper);
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-        return wrapper;
-      }
+  /* ---------- OWNER MODAL ---------- */
+  const modal = $('modal'), mStatus = $('modalStatus');
+  function showStatus(msg, kind) {
+    mStatus.textContent = msg;
+    mStatus.className = 'mt-3 whitespace-pre-wrap break-words rounded-lg border px-3 py-2 font-mono text-xs ' +
+      (kind === 'ok' ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300'
+        : kind === 'err' ? 'border-red-500/40 bg-red-500/10 text-red-300'
+        : 'border-edge bg-space text-slate-300');
+  }
+  function openModal() {
+    $('apiKey').value = getKey();
+    $('kb').value = getKB();
+    if (lastError) showStatus('Last chat error:\n' + lastError, 'err'); else mStatus.className = 'hidden';
+    modal.classList.remove('hidden'); modal.classList.add('flex');
+    $('apiKey').focus();
+  }
+  function closeModal() { modal.classList.add('hidden'); modal.classList.remove('flex'); }
+  function persist() {
+    const k = $('apiKey').value.trim();
+    if (k) store.set(KEY_STORE, k); else store.del(KEY_STORE);
+    const kb = $('kb').value.trim();
+    if (kb && kb !== DEFAULT_KB) store.set(KB_STORE, kb); else store.del(KB_STORE);
+    updatePill();
+  }
 
-      async function handleSend(text) {
-        const trimmed = text.trim();
-        if (!trimmed) return;
+  // Secret trigger: 3 taps on the badge within 1.5s, or one tap on the status pill
+  let taps = 0, tapTimer = null;
+  $('badge').addEventListener('click', () => {
+    taps++; clearTimeout(tapTimer);
+    tapTimer = setTimeout(() => { taps = 0; }, 1500);
+    if (taps >= 3) { taps = 0; openModal(); }
+  });
+  $('pill').addEventListener('click', openModal);
+  $('closeModal').addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
-        appendMessage('user', trimmed);
-        userInput.value = '';
-        userInput.style.height = 'auto';
+  $('saveBtn').addEventListener('click', () => { persist(); showStatus('Saved in this browser.', 'ok'); });
+  $('clearKey').addEventListener('click', () => { $('apiKey').value = ''; store.del(KEY_STORE); updatePill(); showStatus('API key removed. Rocketbot is in offline mode.', 'ok'); });
+  $('resetKb').addEventListener('click', () => { $('kb').value = DEFAULT_KB; store.del(KB_STORE); showStatus('Default knowledge base restored.', 'ok'); });
+  $('testBtn').addEventListener('click', async () => {
+    const k = $('apiKey').value.trim();
+    if (!k) { showStatus('Paste an API key first.', 'err'); return; }
+    persist();
+    showStatus('Testing key…');
+    try {
+      const out = await callGemini(k, [{ role: 'user', parts: [{ text: 'Reply with the single word: ready' }] }], 'You are a connection test. Reply with one word.');
+      lastError = '';
+      showStatus('Key works. Gemini replied: ' + out, 'ok');
+    } catch (e) {
+      lastError = e.message;
+      showStatus(e.message, 'err');
+    }
+  });
 
-        if (apiKey) {
-          const typingNode = appendMessage('bot', '', true);
-          try {
-            const reply = await getGeminiReply(trimmed);
-            typingNode.remove();
-            appendMessage('bot', reply);
-            return;
-          } catch (err) {
-            typingNode.remove();
-            updateStatus('error');
-            keyErrorMsg.textContent = `API Error: ${err.message}`;
-            keyErrorMsg.classList.remove('hidden');
-          }
-        }
-
-        setTimeout(() => {
-          const reply = getTargetedOfflineReply(trimmed);
-          appendMessage('bot', reply);
-        }, 140);
-      }
-
-      chatForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        handleSend(userInput.value);
-      });
-
-      userInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-          e.preventDefault();
-          handleSend(userInput.value);
-        }
-      });
-
-      userInput.addEventListener('input', () => {
-        userInput.style.height = 'auto';
-        userInput.style.height = Math.min(userInput.scrollHeight, 112) + 'px';
-      });
-
-      document.querySelectorAll('.chip-btn').forEach((btn) => {
-        btn.addEventListener('click', () => {
-          handleSend(btn.getAttribute('data-prompt'));
-        });
-      });
-
-      const WELCOME = `Welcome! I'm **Rocketbot** for **Team "The Elevators"** (NGN 110). Ask me a specific question about our **3D-printed ogive nose cone**, **3 swept fins**, **launch physics**, or **safety rules**!`;
-
-      clearChatBtn.addEventListener('click', () => {
-        messagesList.innerHTML = '';
-        chatHistory = [];
-        appendMessage('bot', WELCOME);
-      });
-
-      appendMessage('bot', WELCOME);
-    })();
-  </script>
+  updatePill();
+  welcome();
+})();
+</script>
 </body>
 </html>
