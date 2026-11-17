@@ -119,29 +119,72 @@ tailwind.config = {
   const GROQ_MODELS = ['openai/gpt-oss-120b', 'openai/gpt-oss-20b'];  // tried in order; see console.groq.com/docs/models if Groq retires these
   const isGroq = (k) => /^gsk_/i.test(k);   // Groq keys start with gsk_; anything else is treated as a Google key
 
-  const DEFAULT_KB = `TEAM: "The Elevators" — NGN 110 (Introduction to Engineering & Computing), American University of Sharjah, Fall 2026.
+  const DEFAULT_KB = `=== TEAM & PROJECT OVERVIEW ===
+- Project Name: Water Rocket & Engineering Assistant ("Rocketbot")
+- Course: NGN 110 — Introduction to Engineering & Computing (Fall 2026)
+- Institution: American University of Sharjah (AUS)
+- Team Name: The Elevators
+- Competition Achievement: 45 meters horizontal launch distance
 
-DESIGN: Custom matte black 3D-printed aerodynamic fuselage sleeve and pointed ogive nose cone, fitted snugly over a clear PET plastic beverage bottle that serves as the pressure core.
+=== VERIFIED ROCKET SPECIFICATIONS & COST ===
+- Total Build Cost: 35 AED (low-cost, budget-efficient engineering using upcycled PET bottles, fin material, and gloss black tape)
+- Total Length: 35 cm (15 cm safely below the 50 cm NGN 110 maximum length limit)
+- Dry Mass (Empty Weight): 98 grams
+- Water Propellant Load: 475 mL of tap water (38% of the 1.25 L tank volume)
+- Compressed Air Volume: 62% of the 1.25 L tank volume
+- Loaded Launch Mass: 573 grams (98 g dry airframe + 475 g tap water)
+- Core Construction: Built from two post-consumer 1.25 L PET plastic beverage bottles—one inverted bottle serving as the primary pressurized tank with an exposed blue-ring nozzle, joined with a second bottle section forming the rounded aerodynamic nose cone.
+- Nose Cone & Exterior Finish: Rounded aerodynamic nose cone and lower tail section wrapped smoothly in gloss black tape.
+- Mid-Body Inspection Window: Untaped clear PET midsection left visible between the black nose wrap and black tail wrap so the team can verify the 475 mL water fill level before launch.
+- Stabilizing Fins: 3 radially spaced swept fins wrapped in gloss black tape and securely anchored around the lower tapered tail section.
 
-FINS: 3 swept trapezoidal fins, 3D-printed directly as part of the lower cylindrical fuselage sleeve. This eliminates fin flutter, crooked gluing, and mid-flight detachment. 3 fins balance stability with lower weight and drag than 4 fins.
+=== AERODYNAMICS, PROPULSION & SUSTAINABILITY ===
+- Propulsion Physics: Operates on Newton's Third Law of Motion (F = m_dot * v_e). Compressed air in the upper 62% of the 1.25 L bottle forces 475 mL of dense tap water downward through the nozzle at high velocity, generating upward thrust.
+- Launch Angle: Launched near 42°–45° to maximize horizontal downrange distance (45 meters) while accounting for aerodynamic drag.
+- Flight Stability (Static Margin): The forward gloss-black rounded nose cone reduces frontal pressure drag and pulls the Center of Gravity (CG) forward, while the 3 rear swept fins pull the Center of Pressure (CP) aft—keeping the rocket pointed straight without tumbling. Using 3 fins provides full 3-axis roll/pitch/yaw stabilization with less weight and skin-friction drag than 4 fins.
+- Sustainability & Cost-Effectiveness: Built for only 35 AED by upcycling two single-use post-consumer 1.25 L PET plastic beverage bottles into a reusable flight airframe, operating purely on zero-emission compressed air and tap water.
 
-NOZZLE & LENGTH: The PET bottle neck is left exposed at the bottom so it fits the competition electric launcher. Total length is strictly under 50 cm.
+=== NGN 110 COMPETITION & SAFETY RULES ===
+- Maximum Length Rule: Total rocket length from nozzle to nose cone tip must not exceed 50 cm (ours is 35 cm).
+- Propellant Restriction: Clean tap water and compressed air only—no metal parts, sharp tips, or chemical additives.
+- Mandatory PPE: All team members and operators in the launch zone must wear approved safety goggles during pressurization and launch.
+- 15-Foot Safety Perimeter: All personnel must stand at least 15 feet (4.5 meters) clear of the electric launcher before pressurizing or firing.
 
-PHYSICS & PROPELLANT: Compressed air + tap water only (about 30-35% water by volume, 65-70% air). Thrust follows Newton's Third Law: F = m_dot * v_e (mass flow rate times exhaust velocity). The optimal launch angle for maximum horizontal distance is about 42-45 degrees.
+=== PROJECT SCHEDULE & GANTT CHART (OCT 25 – NOV 18, 2026) ===
+- Total Project Timeline: Sun 10/25/26 to Wed 11/18/26 (21 tasks tracked in MS Project).
+- Phase 1 — Engineering Design & Research (Critical Path):
+  1. Identify the Need: 1 day (Sun 10/25/26)
+  2. Define the Problem: 1 day (Sun 10/25/26 – Mon 10/26/26)
+  3. Background Research: 3 days (Mon 10/26/26 – Thu 10/29/26)
+  4. Establish Criteria and Constraints: 2 days (Thu 10/29/26 – Mon 11/2/26)
+  5. Find Alternative Solutions: 2 days (Mon 11/2/26 – Tue 11/3/26)
+  6. Analyze Alternative Solutions: 2 days (Wed 11/4/26 – Thu 11/5/26)
+  7. Select and Specify Final Design: 1 day (Thu 11/5/26 – Sun 11/8/26)
+- Phase 2 — Rocket Prototyping & Competition:
+  8. Build Rocket Prototype: 3 days (Sun 11/8/26 – Wed 11/11/26)
+  9. Test and Optimize Rocket: 2 days (Wed 11/11/26 – Sun 11/15/26)
+  10. Water Rocket Competition Milestone: 0 days (Sun 11/15/26 — achieved 45 meters)
+- Phase 3 — Parallel Chatbot & Documentation Track (Non-Critical / Parallel Tasks):
+  11. Develop Project Chatbot: 3 days (Thu 11/5/26 – Tue 11/10/26, started in parallel with final design/prototyping)
+  12. Test the Chatbot: 2 days (Tue 11/10/26 – Thu 11/12/26)
+  13. Prepare Progress Report: 3 days (Thu 10/29/26 – Tue 11/3/26)
+  14. Finish Progress Report & Gantt Chart: 3 days (Tue 11/3/26 – Thu 11/5/26)
+  15. Submit Progress Report Milestone: 0 days (Sun 11/8/26)
+  16. Write Final Technical Report: 3 days (Sun 11/15/26 – Tue 11/17/26)
+  17. Complete References and Appendices: 1 day (Mon 11/16/26 – Tue 11/17/26)
+  18. Submit Final Project Report Milestone: 0 days (Tue 11/17/26)
+  19. Start Making PPT Presentation: 2 days (Thu 11/12/26 – Sun 11/15/26)
+  20. Practice Presenting / Chatbot Demo: 1 day (Mon 11/16/26)
+  21. Deliver Final Presentation Milestone: 0 days (Wed 11/18/26)
 
-STABILITY: The ogive nose cone cuts frontal pressure drag and pulls the Center of Gravity (CG) forward. The 3 swept rear fins pull the Center of Pressure (CP) aft, giving a positive static margin (CP behind CG).
-
-SUSTAINABILITY: Upcycles a single-use post-consumer PET bottle. The modular 3D-printed nose cone and fin sleeve slide on without permanent destructive glue, so the shell is reusable across launches. Zero chemical exhaust.
-
-NGN 110 SAFETY RULES: Max 50 cm total length. Tap water + compressed air only (no metal or sharp tips). Mandatory safety goggles for everyone in the launch zone. Minimum 15-foot (4.5 m) safety perimeter during pressurization and launch.
-
-GUARDRAIL: Politely decline unrelated off-topic questions and redirect back to Team "The Elevators'" water rocket project.`;
+=== SCOPE & GUARDRAIL ===
+- Rocketbot only answers questions related to Team "The Elevators'" NGN 110 Water Rocket project, specifications, 35 AED cost, 45 m competition results, physics, safety rules, sustainability, and Gantt chart schedule. Politely decline unrelated general topics.`;
 
   const SYSTEM_PROMPT = (kb) => `You are Rocketbot, the water rocket assistant for Team "The Elevators" (NGN 110, American University of Sharjah, Fall 2026).
 
 Think carefully before answering. Answer ONLY the exact question the user asked, in a concise, conversational engineering tone (usually 2-4 sentences). NEVER dump or recite the whole knowledge base, and do not add facts the user did not ask about. Use plain text; **bold** is fine for a key term. Ground every answer in the knowledge base below; if the knowledge base does not cover something, say so briefly and reason from basic engineering principles without inventing team facts or numbers.
 
-If the question is unrelated to the team's water rocket project, politely decline in one sentence and redirect to the project (design, fins, nose cone, water ratio, launch angle, stability, safety, sustainability).
+If the question is unrelated to the team's water rocket project, politely decline in one sentence and redirect to the project (design, fins, nose cone, water load, launch angle, stability, safety, cost, sustainability, schedule).
 
 KNOWLEDGE BASE:
 """
@@ -192,23 +235,28 @@ ${kb}
 
   /* ---------- OFFLINE FALLBACK ---------- */
   const OFFLINE = [
-    { k: /nose|cone|ogive|drag/i, a: "Our nose cone is a pointed **ogive**, 3D-printed in matte black. It cuts frontal pressure drag and also pulls the **Center of Gravity** forward, which helps keep the rocket stable. It slides on over the PET bottle with no permanent glue." },
-    { k: /\bfins?\b|flutter|swept|trapezoid/i, a: "We use **3 swept trapezoidal fins** printed directly into the lower fuselage sleeve. Printing them as one piece eliminates fin flutter, crooked gluing, and mid-flight detachment, and 3 fins give good stability with less weight and drag than 4." },
-    { k: /water|ratio|fill|volume|propellant|percent|%/i, a: "We fill the bottle to about **30-35% water** and leave **65-70% air**. The compressed air pushes the water out of the nozzle, and only tap water and compressed air are allowed." },
-    { k: /angle|degree|distance|range|trajectory/i, a: "For maximum horizontal distance, the best launch angle is about **42°-45°**. It's slightly under 45° in practice because of drag and the thrust phase." },
-    { k: /safe|goggle|perimeter|rule|danger|metal|sharp/i, a: "NGN 110 safety rules: total length under **50 cm**, **tap water + compressed air only** (no metal or sharp tips), **safety goggles** for everyone in the launch zone, and a minimum **15 ft (4.5 m)** safety perimeter during pressurization and launch." },
-    { k: /sustain|recycl|reus|eco|environment|upcycl|green|glue/i, a: "We **upcycle a single-use PET bottle** as the pressure core. The 3D-printed nose cone and fin sleeve slide on without destructive glue, so the shell is reusable across launches, and there's zero chemical exhaust." },
-    { k: /stabil|center of (gravity|pressure)|\bcg\b|\bcp\b|margin/i, a: "Stability comes from having the **CP behind the CG**. The ogive nose cone moves the CG forward and the 3 swept rear fins move the CP aft, which gives a positive static margin." },
-    { k: /thrust|newton|physics|force|exhaust|velocity|how.*(work|fly)/i, a: "Thrust comes from **Newton's Third Law**: the rocket expels water backward and is pushed forward. In equation form, $F = \\dot{m}\\,v_e$ (mass flow rate times exhaust velocity)." },
-    { k: /nozzle|launcher|length|long|50\s?cm|neck|size|tall/i, a: "The PET bottle neck stays **exposed at the bottom** so it fits the competition electric launcher. The whole rocket is **strictly under 50 cm**." },
-    { k: /design|made|material|print|matte|fuselage|sleeve|bottle|build|rocket/i, a: "Our rocket is a clear **PET bottle pressure core** wrapped in a custom **matte black 3D-printed fuselage sleeve** with an ogive nose cone on top and 3 swept fins built into the lower sleeve." },
-    { k: /team|elevators|who|ngn|aus|sharjah|course|class/i, a: "We're **The Elevators**, a team in NGN 110 (Introduction to Engineering & Computing) at the American University of Sharjah, Fall 2026." }
+    { k: /schedule|gantt|timeline|deadline|milestone|phase|task|ms project|when (is|do|did|was)|presentation|report/i, a: "Our project ran **Oct 25 to Nov 18, 2026** (21 tasks in MS Project). Phase 1 was engineering design and research, Phase 2 was building, testing, and the competition (we hit **45 m on Nov 15**), and Phase 3 was the parallel chatbot and report track. The final presentation milestone is **Wed Nov 18**." },
+    { k: /cost|price|budget|aed|cheap|expens|money/i, a: "The whole rocket cost just **35 AED**. We upcycled two PET bottles and only paid for the fin material and gloss black tape." },
+    { k: /angle|degree|trajectory/i, a: "We launch at about **42°-45°**, which gives the best horizontal distance once you account for drag. That's how we reached **45 m**." },
+    { k: /result|achiev|how far|distance|range|record|score|\b45\b|competition/i, a: "Our rocket flew **45 meters** horizontally at the water rocket competition on Nov 15. It launched near 42°-45° with 475 mL of water." },
+    { k: /mass|weigh|weight|grams?|heavy|\bdry\b|loaded/i, a: "The rocket has a **98 g dry mass**. With 475 mL of water (475 g) the loaded launch mass is **573 g**." },
+    { k: /window|inspect|clear|see[- ]through|midsection|mid-body|verify/i, a: "We left the **clear PET midsection untaped** between the black nose wrap and tail wrap. It works as an inspection window so we can check the **475 mL** water level before launch." },
+    { k: /nose|cone|drag/i, a: "The **rounded nose cone** is a second 1.25 L bottle section wrapped in gloss black tape. It cuts frontal pressure drag and pulls the **Center of Gravity** forward, which helps keep the rocket stable." },
+    { k: /\bfins?\b|swept/i, a: "We use **3 radially spaced swept fins** wrapped in gloss black tape and anchored around the lower tapered tail. 3 fins give full pitch, yaw, and roll stabilization with less weight and skin-friction drag than 4." },
+    { k: /water|ratio|fill|volume|propellant|percent|%|\bml\b|\bair\b|litre|liter/i, a: "We load **475 mL of tap water**, which is **38%** of the 1.25 L tank. The other **62%** is compressed air. Only tap water and compressed air are allowed." },
+    { k: /safe|goggle|ppe|perimeter|rule|danger|metal|sharp/i, a: "NGN 110 safety rules: total length under **50 cm**, **tap water + compressed air only** (no metal parts, sharp tips, or chemical additives), **safety goggles** for everyone in the launch zone, and everyone stays at least **15 ft (4.5 m)** from the electric launcher before pressurizing or firing." },
+    { k: /sustain|recycl|reus|eco|environment|upcycl|green|emission/i, a: "We **upcycled two single-use PET bottles** into a reusable airframe for only 35 AED. It runs on zero-emission compressed air and tap water." },
+    { k: /stabil|center of (gravity|pressure)|\bcg\b|\bcp\b|margin|tumbl/i, a: "Stability comes from keeping the **CP behind the CG**. The nose cone pulls the CG forward and the 3 swept rear fins pull the CP aft, so the rocket flies straight without tumbling." },
+    { k: /thrust|newton|physics|force|exhaust|velocity|how.*(work|fly)/i, a: "Thrust follows **Newton's Third Law**: compressed air in the top 62% of the bottle pushes 475 mL of water out of the nozzle, and the rocket is pushed up. In equation form, `F = ṁ · v_e` (mass flow rate times exhaust velocity)." },
+    { k: /nozzle|launcher|length|long|50\s?cm|35\s?cm|neck|size|tall|blue/i, a: "The rocket is **35 cm long**, which is 15 cm under the 50 cm limit. An inverted bottle is the pressure tank, and its **exposed blue-ring nozzle** connects to the electric launcher." },
+    { k: /design|made|material|tape|bottle|build|built|rocket|construct/i, a: "Our rocket is built from **two upcycled 1.25 L PET bottles**: one inverted as the pressurized tank with an exposed blue-ring nozzle, and a second section as the rounded nose cone. Gloss black tape covers the nose and tail, with 3 swept fins on the lower tail." },
+    { k: /team|elevators|who|ngn|aus|sharjah|course|class/i, a: "We're **The Elevators**, a team in NGN 110 (Introduction to Engineering & Computing) at the American University of Sharjah, Fall 2026. Our rocket reached **45 m** in the competition." }
   ];
   function offlineAnswer(q) {
-    if (/^\s*(hi|hello|hey|salam|marhaba)\b/i.test(q)) return "Hi! I'm Rocketbot, the assistant for Team The Elevators' water rocket. Ask me about our nose cone, fins, water ratio, launch angle, stability, safety rules, or sustainability.";
+    if (/^\s*(hi|hello|hey|salam|marhaba)\b/i.test(q)) return "Hi! I'm Rocketbot, the assistant for Team The Elevators' water rocket. Ask me about our design, water load, fins, launch angle, safety rules, cost, or project schedule.";
     const hit = OFFLINE.find((o) => o.k.test(q));
-    if (hit) return hit.a.replace(/\$F = \\dot\{m\}\\,v_e\$/, '`F = ṁ · v_e`');
-    return "I can only help with Team The Elevators' water rocket project. Try asking about the nose cone, fins, water ratio, launch angle, stability, safety rules, or sustainability.";
+    if (hit) return hit.a;
+    return "I can only help with Team The Elevators' water rocket project. Try asking about the design, water load, fins, launch angle, safety rules, cost, or schedule.";
   }
 
   /* ---------- GEMINI ---------- */
@@ -340,7 +388,7 @@ ${kb}
     history = [];
     addMsg('model', "Hi, I'm **Rocketbot**. I can answer questions about Team The Elevators' water rocket for NGN 110. What would you like to know?");
   }
-  const CHIPS = ['Why a pointed nose cone?', 'Why 3 fins?', 'How much water do we use?', 'Best launch angle?', 'Safety rules', 'How is it sustainable?'];
+  const CHIPS = ['How far did it fly?', 'How much water do we use?', 'Why 3 fins?', 'Best launch angle?', 'Safety rules', 'What did it cost?', 'Project schedule'];
   CHIPS.forEach((c) => {
     const b = document.createElement('button');
     b.type = 'button'; b.textContent = c;
