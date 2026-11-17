@@ -115,6 +115,9 @@ tailwind.config = {
   const KEY_STORE = 'rocketbot_api_key';
   const KB_STORE = 'rocketbot_kb';
   const TIMEOUT_MS = 8000;
+  // Built-in key so every visitor gets AI answers. Anyone can read this from the page source.
+  // A key saved in the owner modal (localStorage) takes priority over this one.
+  const EMBEDDED_KEY = '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';
   const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
   const GROQ_MODELS = ['openai/gpt-oss-120b', 'openai/gpt-oss-20b'];  // tried in order; see console.groq.com/docs/models if Groq retires these
   const isGroq = (k) => /^gsk_/i.test(k);   // Groq keys start with gsk_; anything else is treated as a Google key
@@ -199,7 +202,8 @@ ${kb}
     set: (k, v) => { try { localStorage.setItem(k, v); } catch {} },
     del: (k) => { try { localStorage.removeItem(k); } catch {} }
   };
-  const getKey = () => (store.get(KEY_STORE) || '').trim();
+  const getStoredKey = () => (store.get(KEY_STORE) || '').trim();
+  const getKey = () => getStoredKey() || EMBEDDED_KEY;
   const getKB = () => store.get(KB_STORE) || DEFAULT_KB;
   let history = [];          // {role:'user'|'model', text}
   let busy = false;
@@ -413,7 +417,7 @@ ${kb}
         : 'border-edge bg-space text-slate-300');
   }
   function openModal() {
-    $('apiKey').value = getKey();
+    $('apiKey').value = getStoredKey();
     $('kb').value = getKB();
     if (lastError) showStatus('Last chat error:\n' + lastError, 'err'); else mStatus.className = 'hidden';
     modal.classList.remove('hidden'); modal.classList.add('flex');
@@ -441,7 +445,7 @@ ${kb}
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
   $('saveBtn').addEventListener('click', () => { persist(); showStatus('Saved in this browser.', 'ok'); });
-  $('clearKey').addEventListener('click', () => { $('apiKey').value = ''; store.del(KEY_STORE); updatePill(); showStatus('API key removed. Rocketbot is in offline mode.', 'ok'); });
+  $('clearKey').addEventListener('click', () => { $('apiKey').value = ''; store.del(KEY_STORE); updatePill(); showStatus(EMBEDDED_KEY ? 'Saved key removed. Rocketbot is using the built-in key.' : 'API key removed. Rocketbot is in offline mode.', 'ok'); });
   $('resetKb').addEventListener('click', () => { $('kb').value = DEFAULT_KB; store.del(KB_STORE); showStatus('Default knowledge base restored.', 'ok'); });
   $('testBtn').addEventListener('click', async () => {
     const k = $('apiKey').value.trim();
